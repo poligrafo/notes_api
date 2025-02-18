@@ -5,6 +5,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Настройки приложения"""
 
+    PROJECT_NAME: str = "Notes API"
+    DEBUG: bool = False
+
     DB_USER: str
     DB_PASSWORD: str
     DB_HOST: str
@@ -17,7 +20,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.env"),
+        env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../.env"),
         env_file_encoding="utf-8",
     )
 

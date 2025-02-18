@@ -3,7 +3,7 @@ from typing import Optional
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 
-from app.core.config import settings
+from src.app.core.config import settings
 
 # Настройки хеширования паролей
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
