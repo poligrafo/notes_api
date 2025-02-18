@@ -35,7 +35,7 @@ async def login(user_data: UserCreateSchema, session: AsyncSession = Depends(get
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
-    password_hash = user.password_hash  # ✅ Исправлено, получаем значение из Mapped[str]
+    password_hash = user.password_hash
 
     if not verify_password(user_data.password, password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
