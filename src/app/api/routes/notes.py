@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from src.app.api.dependencies.auth_deps import get_current_user, get_db
+from src.app.api.dependencies.deps import get_current_user, get_db
 from src.app.schemas.note_schemas import NoteCreateSchema, NoteUpdateSchema, NoteSchema
 from src.app.db.models import Note, User
 

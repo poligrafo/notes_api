@@ -35,6 +35,12 @@ services:
     ports:
       - "8008:8008"
     command: ["sh", "-c", "poetry run alembic upgrade head && poetry run uvicorn src.main:app --host 0.0.0.0 --port 8008"]
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8008/docs" ]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
 
 volumes:
   postgres_data:
