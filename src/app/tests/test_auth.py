@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 from httpx import AsyncClient
 
@@ -7,9 +5,8 @@ from httpx import AsyncClient
 @pytest.mark.asyncio
 async def test_register_user(async_client: AsyncClient):
     """Тест регистрации нового пользователя"""
-    unique_username = f"testuser_{uuid.uuid4().hex[:6]}"
     response = await async_client.post("/auth/register", json={
-        "username": unique_username,
+        "username": "testuser",
         "password": "testpassword"
     })
     assert response.status_code == 200, f"Register failed: {response.json()}"

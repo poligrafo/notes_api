@@ -13,10 +13,12 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 async def get_all_notes(
     session: AsyncSession = Depends(get_db),
     _: str = Depends(require_role("Admin"))
-):
+) -> list[NoteSchema]:
     """Администратор получает все заметки (включая удаленные)"""
     result = await session.execute(select(Note))
-    return result.scalars().all()
+    notes = result.scalars().all()
+
+    return [NoteSchema.from_orm(note) for note in notes]
 
 
 @router.get("/notes/{note_id}", response_model=NoteSchema)
@@ -24,12 +26,12 @@ async def get_specific_note(
     note_id: int,
     session: AsyncSession = Depends(get_db),
     _: str = Depends(require_role("Admin"))
-):
+) -> NoteSchema:
     """Администратор получает конкретную заметку"""
     note = await session.get(Note, note_id)
     if not note:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")
-    return note
+    return NoteSchema.from_orm(note)
 
 
 @router.get("/users/{user_id}/notes", response_model=list[NoteSchema])
@@ -37,10 +39,12 @@ async def get_user_notes(
     user_id: int,
     session: AsyncSession = Depends(get_db),
     _: str = Depends(require_role("Admin"))
-):
+) -> list[NoteSchema]:
     """Администратор получает все заметки конкретного пользователя"""
     result = await session.execute(select(Note).where(Note.user_id == user_id))
-    return result.scalars().all()
+    notes = result.scalars().all()
+
+    return [NoteSchema.from_orm(note) for note in notes]
 
 
 @router.put("/notes/{note_id}/restore")
@@ -48,7 +52,7 @@ async def restore_note(
     note_id: int,
     session: AsyncSession = Depends(get_db),
     _: str = Depends(require_role("Admin"))
-):
+)-> dict:
     """Администратор восстанавливает удаленную заметку"""
     note = await session.get(Note, note_id)
     if not note:

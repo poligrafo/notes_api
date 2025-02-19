@@ -1,3 +1,5 @@
+from typing import Callable
+
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.future import select
@@ -35,7 +37,7 @@ async def get_current_user(
     return user
 
 
-def require_role(role: str):
+def require_role(role: str) -> Callable[[User], User]:
     """Проверка ролей (работает как FastAPI Dependency)"""
     def role_checker(user: User = Depends(get_current_user)) -> User:
         if user.role != role:

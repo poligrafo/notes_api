@@ -23,3 +23,8 @@ class NoteSchema(BaseModel):
     is_deleted: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+    @classmethod
+    def from_orm(cls, obj):
+        """Преобразование из ORM-объекта в Pydantic модель"""
+        return cls(**obj.__dict__)

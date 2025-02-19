@@ -11,7 +11,10 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register", response_model=UserSchema)
-async def register(user_data: UserCreateSchema, session: AsyncSession = Depends(get_db)):
+async def register(
+        user_data: UserCreateSchema,
+        session: AsyncSession = Depends(get_db)
+) -> UserSchema:
     """Регистрация пользователя"""
     existing_user = await session.execute(select(User).where(User.username == user_data.username))
     user = existing_user.scalar_one_or_none()
@@ -25,11 +28,14 @@ async def register(user_data: UserCreateSchema, session: AsyncSession = Depends(
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
-    return new_user
 
+    return UserSchema.from_orm(new_user)
 
 @router.post("/login", response_model=TokenSchema)
-async def login(user_data: UserCreateSchema, session: AsyncSession = Depends(get_db)):
+async def login(
+        user_data: UserCreateSchema,
+        session: AsyncSession = Depends(get_db)
+) -> dict:
     """Авторизация пользователя"""
     user_result = await session.execute(select(User).where(User.username == user_data.username))
     user = user_result.scalar_one_or_none()
@@ -47,6 +53,6 @@ async def login(user_data: UserCreateSchema, session: AsyncSession = Depends(get
 
 
 @router.get("/me", response_model=UserSchema)
-async def get_me(user: User = Depends(get_current_user)):
+async def get_me(user: User = Depends(get_current_user)) -> UserSchema:
     """Получение информации о текущем пользователе"""
-    return user
+    return UserSchema.from_orm(user)
