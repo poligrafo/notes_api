@@ -41,7 +41,7 @@ Notes API - это асинхронный API-сервис на FastAPI, кот�
 
 Запустите проект с помощью Docker Compose:
    ```bash
-   docker-compose up --build
+   docker compose up --build
    ```
 Проект запустится на http://localhost:8008.
 
