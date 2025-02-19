@@ -18,6 +18,13 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-jose = "^3.3.0"
 pyjwt = "^2.10.1"
 loguru = "^0.7.3"
+pytest = "^8.3.4"
+httpx = "^0.28.1"
+starlette-admin = "^0.14.1"
+sqlalchemy-admin = "^0.1.2"
+itsdangerous = "^2.2.0"
+sqladmin = "^0.20.1"
+bcrypt = "4.0.1"
 
 
 [build-system]

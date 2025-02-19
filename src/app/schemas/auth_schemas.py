@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -11,6 +13,7 @@ class UserCreateSchema(BaseModel):
     """Схема регистрации пользователя"""
     username: str
     password: str
+    role: Literal["User", "Admin"] = "User"
 
 
 class UserSchema(BaseModel):

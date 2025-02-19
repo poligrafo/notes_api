@@ -1,7 +1,6 @@
-from typing import Optional
-
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -19,17 +18,18 @@ async def get_db() -> AsyncSession:
 
 
 async def get_current_user(
-        token: str = Security(oauth2_scheme),
-        session: AsyncSession = Depends(get_db)
-) -> Optional[User]:
+    token: str = Security(oauth2_scheme),
+    session: AsyncSession = Depends(get_db)
+) -> User:
     """Получаем текущего пользователя по JWT"""
     payload = decode_access_token(token)
     if not payload or "sub" not in payload:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
-    user: Optional[User] = await session.get(User, int(payload["sub"]))
+    user_result = await session.execute(select(User).where(User.id == int(payload["sub"])))
+    user = user_result.scalar_one_or_none()
 
-    if user is None:
+    if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 
     return user

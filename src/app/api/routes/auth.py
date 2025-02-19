@@ -19,7 +19,9 @@ async def register(user_data: UserCreateSchema, session: AsyncSession = Depends(
     if user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
 
-    new_user = User(username=user_data.username, password_hash=hash_password(user_data.password), role="User")
+    role = user_data.role if hasattr(user_data, "role") and user_data.role in ["User", "Admin"] else "User"
+
+    new_user = User(username=user_data.username, password_hash=hash_password(user_data.password), role=role)
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
