@@ -39,7 +39,10 @@ async def test_update_note(async_client: AsyncClient):
     """Тест обновления заметки"""
 
     # Логинимся
-    login_response = await async_client.post("/auth/login", json={"username": "testuser", "password": "testpassword"})
+    login_response = await async_client.post(
+        "/auth/login",
+        json={"username": "testuser", "password": "testpassword"}
+    )
     assert login_response.status_code == 200, f"User login failed: {login_response.json()}"
     token = login_response.json()["access_token"]
 
